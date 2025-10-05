@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import BookCard from '../components/BookCard';
+import { API_BASE_URL } from '../config/api';
 import toast from 'react-hot-toast';
 
 const Profile = () => {
@@ -19,7 +20,7 @@ const Profile = () => {
   const fetchUserData = async () => {
     try {
       // Fetch user's books
-      const booksResponse = await axios.get('/api/books', {
+      const booksResponse = await axios.get(`${API_BASE_URL}/api/books`, {
         params: { search: '', genre: '', sortBy: 'createdAt', sortOrder: 'desc', limit: 100 }
       });
       const allBooks = booksResponse.data.books;
@@ -31,7 +32,7 @@ const Profile = () => {
       const reviewsData = [];
       for (const book of allBooks) {
         try {
-          const reviewsResponse = await axios.get(`/api/reviews/${book._id}`);
+          const reviewsResponse = await axios.get(`${API_BASE_URL}/api/reviews/${book._id}`);
           const myReviews = reviewsResponse.data.filter(review => review.userId._id === user.id);
           reviewsData.push(...myReviews.map(review => ({ ...review, book })));
         } catch (error) {

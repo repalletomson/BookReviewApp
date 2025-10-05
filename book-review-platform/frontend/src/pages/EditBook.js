@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import { API_BASE_URL } from '../config/api';
 import toast from 'react-hot-toast';
 
 const EditBook = () => {
@@ -26,7 +27,7 @@ const EditBook = () => {
 
   const fetchBook = async () => {
     try {
-      const response = await axios.get(`/api/books/${id}`);
+      const response = await axios.get(`${API_BASE_URL}/api/books/${id}`);
       const book = response.data;
       
       // Check if user is the book creator
@@ -63,7 +64,7 @@ const EditBook = () => {
     setSubmitting(true);
 
     try {
-      await axios.put(`/api/books/${id}`, formData);
+      await axios.put(`${API_BASE_URL}/api/books/${id}`, formData);
       toast.success('Book updated successfully!');
       navigate(`/books/${id}`);
     } catch (error) {

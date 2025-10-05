@@ -10,6 +10,7 @@ import AddBook from "./pages/AddBook";
 import EditBook from "./pages/EditBook";
 import Profile from "./pages/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
+// import DebugPanel from "./components/DebugPanel"; // Removed for production
 
 function App() {
   return (
@@ -49,6 +50,7 @@ function App() {
           </Routes>
         </main>
         <FloatingActionButton />
+        {/* <DebugPanel /> Removed for production */}
         <Toaster
           position="top-right"
           toastOptions={{

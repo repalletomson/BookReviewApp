@@ -2,12 +2,19 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import BookCard from '../components/BookCard';
 import Pagination from '../components/Pagination';
+import { API_BASE_URL } from '../config/api';
 import toast from 'react-hot-toast';
 
 const Home = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [pagination, setPagination] = useState({});
+  const [pagination, setPagination] = useState({
+    totalBooks: 0,
+    totalPages: 0,
+    currentPage: 1,
+    hasNextPage: false,
+    hasPrevPage: false
+  });
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState('');
   const [genre, setGenre] = useState('All');
@@ -28,7 +35,7 @@ const Home = () => {
         sortOrder
       };
 
-      const response = await axios.get('/api/books', { params });
+      const response = await axios.get(`${API_BASE_URL}/api/books`, { params });
       setBooks(response.data.books);
       setPagination(response.data.pagination);
     } catch (error) {
@@ -202,10 +209,10 @@ const Home = () => {
       {!loading && (
         <div className="flex items-center justify-between mb-6">
           <p className="text-navy-600 dark:text-gray-400 font-medium">
-            {pagination.totalBooks > 0 ? (
+            {pagination?.totalBooks > 0 ? (
               <>
                 Showing <span className="font-bold text-primary-600 dark:text-primary-400">{books.length}</span> of{' '}
-                <span className="font-bold text-primary-600 dark:text-primary-400">{pagination.totalBooks}</span> books
+                <span className="font-bold text-primary-600 dark:text-primary-400">{pagination?.totalBooks || 0}</span> books
                 {search && (
                   <span className="ml-2">
                     for "<span className="font-semibold text-navy-800 dark:text-gray-200">{search}</span>"
@@ -266,8 +273,8 @@ const Home = () => {
 
           <div className="mt-12">
             <Pagination
-              currentPage={pagination.currentPage}
-              totalPages={pagination.totalPages}
+              currentPage={pagination?.currentPage || 1}
+              totalPages={pagination?.totalPages || 0}
               onPageChange={handlePageChange}
             />
           </div>

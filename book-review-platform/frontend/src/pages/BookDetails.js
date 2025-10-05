@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import RatingAnalytics from '../components/RatingAnalytics';
+import { API_BASE_URL } from '../config/api';
 import toast from 'react-hot-toast';
 
 const BookDetails = () => {
@@ -27,7 +28,7 @@ const BookDetails = () => {
 
   const fetchBookDetails = async () => {
     try {
-      const response = await axios.get(`/api/books/${id}`);
+      const response = await axios.get(`${API_BASE_URL}/api/books/${id}`);
       setBook(response.data);
     } catch (error) {
       toast.error('Book not found');
@@ -37,7 +38,7 @@ const BookDetails = () => {
 
   const fetchReviews = async () => {
     try {
-      const response = await axios.get(`/api/reviews/${id}`);
+      const response = await axios.get(`${API_BASE_URL}/api/reviews/${id}`);
       setReviews(response.data);
     } catch (error) {
       console.error('Fetch reviews error:', error);
@@ -61,11 +62,11 @@ const BookDetails = () => {
       };
 
       if (editingReview) {
-        await axios.put(`/api/reviews/${editingReview._id}`, reviewForm);
+        await axios.put(`${API_BASE_URL}/api/reviews/${editingReview._id}`, reviewForm);
         toast.success('Review updated successfully!');
         setEditingReview(null);
       } else {
-        await axios.post('/api/reviews', reviewData);
+        await axios.post(`${API_BASE_URL}/api/reviews`, reviewData);
         toast.success('Review added successfully!');
       }
 
@@ -84,7 +85,7 @@ const BookDetails = () => {
     if (!window.confirm('Are you sure you want to delete this review?')) return;
 
     try {
-      await axios.delete(`/api/reviews/${reviewId}`);
+      await axios.delete(`${API_BASE_URL}/api/reviews/${reviewId}`);
       toast.success('Review deleted successfully!');
       fetchReviews();
       fetchBookDetails();
@@ -105,7 +106,7 @@ const BookDetails = () => {
     if (!window.confirm('Are you sure you want to delete this book? This will also delete all reviews.')) return;
 
     try {
-      await axios.delete(`/api/books/${id}`);
+      await axios.delete(`${API_BASE_URL}/api/books/${id}`);
       toast.success('Book deleted successfully!');
       navigate('/');
     } catch (error) {
