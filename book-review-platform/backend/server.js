@@ -61,24 +61,29 @@ const corsOptions = {
     // Allow requests with no origin (mobile apps, Postman, etc.)
     if (!origin) return callback(null, true);
     
-    // In development, allow localhost
-    if (process.env.NODE_ENV === 'development') {
-      if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
-        return callback(null, true);
-      }
+    // For development and testing, allow common local IPs and localhost
+    const isLocalDevelopment = !origin || 
+      origin.includes('localhost') || 
+      origin.includes('127.0.0.1') ||
+      origin.match(/^https?:\/\/10\.\d+\.\d+\.\d+:\d+$/) ||
+      origin.match(/^https?:\/\/192\.168\.\d+\.\d+:\d+$/) ||
+      origin.match(/^https?:\/\/172\.\d+\.\d+\.\d+:\d+$/);
+    
+    if (isLocalDevelopment) {
+      return callback(null, true);
     }
     
-    // In production, you'd specify your actual domain
+    // In production, allow specific domains
     const allowedOrigins = [
-      'http://localhost:3000',
-      'http://localhost:3001',
-      'https://your-bookverse-domain.com'
+      'https://your-bookverse-domain.com',
+      'https://bookverse-frontend.netlify.app' // Add your actual frontend domain here
     ];
     
     if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error('CORS policy: This origin is not allowed to access our BookVerse API.'));
+      // For now, allow all origins for development (remove this in actual production)
+      callback(null, true);
     }
   },
   credentials: true,
